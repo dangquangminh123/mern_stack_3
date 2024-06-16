@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { Breadcrumd, Product, SearchItem } from "../../components";
+import { useParams, useSearchParams, useNavigate, createSearchParams } from "react-router-dom";
+import { Breadcrumd, Product, SearchItem, InputSelect } from "../../components";
 import { apiGetProducts } from "../../apis";
 import Masonry from "react-masonry-css";
-
+import { sorts } from "../../ultils/contants";
 const breakpointColumnsObj = {
   default: 4,
   1100: 3,
@@ -20,21 +20,58 @@ const Products = () => {
     if(response.success) setproducts(response.products); 
   };
 
+  const navigate = useNavigate();
 
+  const [sort, setSort] = useState(''); 
   const { category } = useParams();
+
   useEffect(() => {
     let param = [];
     // entries tạo các cặp key/value của 1 object thành mảng lồng vào nhau 
     for (let i of params.entries()) param.push(i)
     const queries = {}
+    // Trường hợp có cả from và to
+    let priceQuery = {}
     for (let i of params) queries[i[0]] = i[1];
-    fetchProductsByCategory(queries);
+
+    if(queries.to && queries.from) {
+      priceQuery = {
+        $and: [
+          {price: {gte: queries.from }},
+          {price: {lte: queries.to }},
+        ]
+      }
+      delete queries.price
+    }
+    if(queries.from) queries.price = { gte: queries.from }
+    if(queries.to) queries.price = { lte: queries.to }
+    
+    delete queries.from
+    delete queries.to
+    
+    const finalPrice = {...priceQuery, ...queries }
+    // console.log(finalPrice)
+    fetchProductsByCategory(finalPrice);
   }, [params]);
 
   const changeActiveFitler = useCallback((name) => {
     if(activeClick === name) setActiveClick(null)
     else setActiveClick(name)
   }, [activeClick])
+
+  const changeValue = useCallback((value) => {
+    setSort(value)
+  }, [sort])
+
+  useEffect(() => {
+    navigate({
+      pathname: `/${category}`,
+      search: createSearchParams({
+        sort
+      }).toString()
+    })
+  }, [sort])
+
   return (
     <div className="w-full">
       <div className="h-[81px] flex justify-center items-center bg-gray-100">
@@ -51,7 +88,12 @@ const Products = () => {
             <SearchItem name="color" activeClick={activeClick} changeActiveFitler={changeActiveFitler}/>
           </div>
         </div>
-        <div className="w-1/5 flex">Sort By</div>
+        <div className="w-1/5 flex flex-col gap-3">
+          <span className="font-semibold text-sm">Sort By</span>
+          <div className="w-full">
+              <InputSelect changeValue={changeValue} value={sort} options={sorts} />
+          </div>
+        </div>
       </div>
 
       <div className="mt-8 w-main m-auto">

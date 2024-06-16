@@ -110,16 +110,16 @@ export const productInfoTabs = [
     In preparation for your delivery, please remove existing furniture, pictures, mirrors, accessories, etc. to prevent damages. Also insure that the area where you would like your furniture placed is clear of any old furniture and any other items that may obstruct the passageway of the delivery team. Shopify Shop will deliver, assemble, and set-up your new furniture purchase and remove all packing materials from your home. Our delivery crews are not permitted to move your existing furniture or other household items. Delivery personnel will attempt to deliver the purchased items in a safe and controlled manner but will not attempt to place furniture if they feel it will result in damage to the product or your home. Delivery personnel are unable to remove doors, hoist furniture or carry furniture up more than 3 flights of stairs. An elevator must be available for deliveries to the 4th floor and above.
     OTHER CUSTOMERS ALSO BUY:`,
   },
-  {
-    id: 5,
-    name: "CUSTOMER REVIEW",
-    content: `CUSTOMER REVIEWS
-    Based on 1 review
-    Write a review
-    Good device
-    Tadatheme on May 20, 2017
-    You could engage with augmented reality with a headset, and see 3D objects "projected" into your real world -- something that's usually called "mixed reality." Augmented reality doesn't need a headset, though. It can use your phone. In fact, it already does. 2016's summer smash hit Pokemon Go was the most widespread use of AR ever seen.`,
-  },
+  // {
+  //   id: 5,
+  //   name: "CUSTOMER REVIEW",
+  //   content: `CUSTOMER REVIEWS
+  //   Based on 1 review
+  //   Write a review
+  //   Good device
+  //   Tadatheme on May 20, 2017
+  //   You could engage with augmented reality with a headset, and see 3D objects "projected" into your real world -- something that's usually called "mixed reality." Augmented reality doesn't need a headset, though. It can use your phone. In fact, it already does. 2016's summer smash hit Pokemon Go was the most widespread use of AR ever seen.`,
+  // },
 ];
 
 export const colors = [
@@ -133,4 +133,65 @@ export const colors = [
   'purple',
   'green',
   'blue',
+]
+
+export const sorts = [
+  {
+    id: 1,
+    value: '-sold',
+    text: 'Best selling'
+  },
+  {
+    id: 2,
+    value: '-title',
+    text: 'Alphabetically, A-Z'
+  },
+  {
+    id: 3,
+    value: 'title',
+    text: 'Alphabetically, Z-A'
+  },
+  {
+    id: 4,
+    value: '-price',
+    text: 'Price, high to low'
+  },
+  {
+    id: 5,
+    value: 'price',
+    text: 'Price, low to high'
+  },
+  {
+    id: 6,
+    value: '-createdAt',
+    text: 'Date, new to old'
+  },
+  {
+    id: 7,
+    value: 'createdAt',
+    text: 'Date, old to new'
+  },
+]
+
+export const voteOptions = [
+  {
+    id: 1,
+    text: 'Quá tệ'
+  },
+  {
+    id: 2,
+    text: 'Không tốt'
+  },
+  {
+    id: 3,
+    text: 'Bình thường'
+  },  
+  {
+    id: 4,
+    text: 'Tốt'
+  },
+  {
+    id: 5,
+    text: 'Tuyệt vời'
+  },
 ]

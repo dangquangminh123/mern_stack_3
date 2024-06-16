@@ -39,13 +39,21 @@ const getProducts = asyncHandler(async (req, res) => {
     // Format lại các operator cho đúng cú pháp mongoose
     let queryString =JSON.stringify(queries)
     queryString = queryString.replace(/\b(gte|gt|It|lte)\b/g, macthedEl => `$${macthedEl}`)
-     const formatedQueries = JSON.parse(queryString)
+    const formatedQueries = JSON.parse(queryString)
+    let colorQueryObject = {}
 
     // Filterning
     if (queries?.title) formatedQueries.title = {$regex: queries.title, $options: 'i'}
     if (queries?.category) formatedQueries.category = {$regex: queries.category, $options: 'i'}
-    if (queries?.color) formatedQueries.color = {$regex: queries.color, $options: 'i'}
-    let queryCommand = Product.find(formatedQueries)
+    if (queries?.color) {
+        delete formatedQueries.color
+        const colorArr = queries.color?.split(',')
+        const colorQuery = colorArr.map(el => ({color: {$regex: el, $options: 'i'} }))
+        colorQueryObject = { $or: colorQuery }
+    }
+    const q = {...colorQueryObject, ...formatedQueries}
+    // console.log(q);
+    let queryCommand = Product.find(q)
 
     // Sorting
     if(req.query.sort) {
@@ -73,7 +81,7 @@ const getProducts = asyncHandler(async (req, res) => {
     // Số lượng sản phẩm thỏa mãn điều kiện !== số lượng sản phẩm trả về 1 lần khi gọi API
     queryCommand.exec(async (err, response) => {
         if(err) throw new Error(err.message)
-        const counts = await Product.find(formatedQueries).countDocuments()
+        const counts = await Product.find(q).countDocuments()
         return res.status(200).json({
             success: response ? true : false,
             counts,
@@ -106,7 +114,7 @@ const ratings = asyncHandler(async (req, res) => {
     const {star, comment, pid} = req.body
     if(!star || !pid) throw new Error('Missing inputs')
     const ratingProduct = await Product.findById(pid)
-    const alreadyRating = ratingProduct?.rating?.find(el => el.postedBy.toString() === _id)
+    const alreadyRating = ratingProduct?.ratings?.find(el => el.postedBy.toString() === _id)
 
     if(alreadyRating) {
         // Updated star & comment
@@ -118,19 +126,35 @@ const ratings = asyncHandler(async (req, res) => {
             $set: { "ratings.$.star": star, "ratings.$.comment": comment }
         }, {new: true})
     }else {
-        const response = await Product.findByIdAndUpdate(pid, {
+        await Product.findByIdAndUpdate(pid, {
             $push: {ratings: {star, comment, postedBy: _id}}
         }, {new: true})
     }
 
     // Sum ratings
     const updatedProduct = await Product.findById(pid)
+    // Check if updatedProduct is null or undefined
+    if (!updatedProduct) {
+        return res.status(404).json({ success: false, message: 'Product not found' });
+    }
     const ratingsCount = updatedProduct.ratings.length
-    const sumRatings = updateProduct.ratings.reduce((sum, el) => sum +el.star, 0)
-    updateProduct.totalRatings = Math.round(sumRatings * 10 / ratingsCount) / 10
-    await updateProduct.save()
+    if (!updatedProduct.ratings || !Array.isArray(updatedProduct.ratings)) {
+        return res.status(400).json({ success: false, message: 'Invalid ratings data' });
+    }
+    const sumRatings = updateProduct.ratings.reduce((sum, el) => sum + +el.star, 0)
+
+    const averageRating = Math.round(sumRatings * 10 / ratingsCount) / 10;
+    updatedProduct.totalRatings = averageRating;
+
+    try {
+        await updatedProduct.save(); // Assuming updatedProduct.save() works as expected
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Failed to save product' });
+    }
+    // await updateProduct.save()
 
     return res.status(200).json({
+        
         status: true,
         updateProduct
     })

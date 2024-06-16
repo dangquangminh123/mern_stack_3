@@ -13,10 +13,13 @@ export const formatMoney = (number) =>
 export const renderStarFromNumber = (number, size) => {
   if (!Number(number)) return;
   const stars = [];
-  for (let i = 0; i < +number; i++)
+  number = Math.round(number)
+  for (let i = 0; i < +number; i++) {
     stars.push(<FaStar color="orange" size={size || 16} />);
-  for (let i = 5; i > +number; i--)
+  }
+  for (let i = 5; i > +number; i--) {
     stars.push(<FaRegStar color="orange" size={size || 16} />);
+  }
   return stars;
 };
 

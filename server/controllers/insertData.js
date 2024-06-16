@@ -19,7 +19,8 @@ const fn = async (product) => {
         // Vào product và tìm đến mảng variants tìm những element có label là color và lấy phần tử đầu tiên
         color: product?.variants?.find(el => el.label === 'Color')?.variants[0],
         thumb: product?.thumb,
-        totalRatings: Math.round(Math.random() * 5)
+        // totalRatings: Math.round(Math.random() * 5)
+        totalRatings: 0
     })
 }
 

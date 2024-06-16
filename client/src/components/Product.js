@@ -13,8 +13,8 @@ const Product = ({ productData, isNew, normal }) => {
   // console.log(isNew); 
   const [isShowOption, setIsShowOption] = useState(false)
   return (
-    <div className="w-full text-base px-[-10px]">
-      <Link className="w-full border p-[15px] flex flex-col items-center"
+    <div className="w-full text-base px-[10px]">
+      <Link className="w-full border px-[15px] flex flex-col items-center"
         to={`/${productData?.category?.toLowerCase()}/${productData?._id}/${productData?.title}`}
         onMouseEnter={e => {
           e.stopPropagation()
