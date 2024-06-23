@@ -6,7 +6,8 @@ export const userSlice = createSlice({
     isLoggedIn: false,
     current: null,
     token: null,
-    isLoading: false
+    isLoading: false,
+    mes: ''
   },
   reducers: {
     login: (state, action) => {
@@ -15,9 +16,15 @@ export const userSlice = createSlice({
         // state.current = action.payload.userData
     },
     logout: (state, action) => {
-      state.isLoggedIn = false
-      state.token = null
+      state.isLoggedIn= false
+      state.current= null
+      state.token= null
+      state.isLoading= false
+      state.mes= ''
     },
+    clearMessage: (state) => {
+      state.mes = ''
+    }
   },
   extraReducers: (builder) => {
     // Bắt đầu thực hiện action (Promise pending)
@@ -29,18 +36,22 @@ export const userSlice = createSlice({
     builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
       // Tắt trạng thái loading lưu thông tin action vào store
       state.isLoading = false;
-      console.log(action.payload);
+      // console.log(action.payload);
       state.current = action.payload;
+      state.isLoggedIn = true;
     });
     // Khi thực hiện action thất bại (Promise reject)
     builder.addCase(actions.getCurrent.rejected, (state, action) => {
       // Tắt trạng thái loading lưu thông tin thất bại vào store
       state.isLoading = false;
       state.current = null;
+      state.isLoggedIn = false;
+      state.token = null;
+      state.mes = 'Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại!'
     });
   },
 });
 
-export const { login, logout } = userSlice.actions
+export const { login, logout, clearMessage } = userSlice.actions
 
 export default userSlice.reducer;

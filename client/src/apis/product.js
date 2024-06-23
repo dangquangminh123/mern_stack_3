@@ -16,3 +16,21 @@ export const apiRatings = (data) => axios({
     method: 'put',
     data
 })
+
+
+export const apiCreateProduct = (data) => axios({
+    url: '/product/',
+    method: 'post',
+    data
+})
+
+export const apiUpdateProduct = (data, pid) => axios({
+    url: '/product/' + pid,
+    method: 'put',
+    data
+})
+
+export const apiDeleteProduct = (pid) => axios({
+    url: '/product/' + pid,
+    method: 'delete',
+})

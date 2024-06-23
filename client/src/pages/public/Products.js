@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useSearchParams, useNavigate, createSearchParams } from "react-router-dom";
-import { Breadcrumd, Product, SearchItem, InputSelect } from "../../components";
+import { Breadcrumd, Product, SearchItem, InputSelect, Pagination } from "../../components";
 import { apiGetProducts } from "../../apis";
 import Masonry from "react-masonry-css";
 import { sorts } from "../../ultils/contants";
@@ -17,7 +17,7 @@ const Products = () => {
   const [params] = useSearchParams()
   const fetchProductsByCategory = async (queries) => {
     const response = await apiGetProducts(queries);
-    if(response.success) setproducts(response.products); 
+    if(response.success) setproducts(response); 
   };
 
   const navigate = useNavigate();
@@ -26,13 +26,15 @@ const Products = () => {
   const { category } = useParams();
 
   useEffect(() => {
-    let param = [];
-    // entries tạo các cặp key/value của 1 object thành mảng lồng vào nhau 
-    for (let i of params.entries()) param.push(i)
-    const queries = {}
+    // let param = [];
+    // // entries tạo các cặp key/value của 1 object thành mảng lồng vào nhau 
+    // for (let i of params.entries()) param.push(i)
+    // const queries = {}
+    // for (let i of params) queries[i[0]] = i[1];
+    const queries = Object.fromEntries([...params])
     // Trường hợp có cả from và to
     let priceQuery = {}
-    for (let i of params) queries[i[0]] = i[1];
+    
 
     if(queries.to && queries.from) {
       priceQuery = {
@@ -42,18 +44,20 @@ const Products = () => {
         ]
       }
       delete queries.price
+    } else {
+      if(queries.from) queries.price = { gte: queries.from }
+      if(queries.to) queries.price = { lte: queries.to }
     }
-    if(queries.from) queries.price = { gte: queries.from }
-    if(queries.to) queries.price = { lte: queries.to }
-    
     delete queries.from
     delete queries.to
     
     const finalPrice = {...priceQuery, ...queries }
     // console.log(finalPrice)
     fetchProductsByCategory(finalPrice);
+    window.scrollTo(0, 0)
   }, [params]);
 
+  // Set refresher activer filter 
   const changeActiveFitler = useCallback((name) => {
     if(activeClick === name) setActiveClick(null)
     else setActiveClick(name)
@@ -64,12 +68,14 @@ const Products = () => {
   }, [sort])
 
   useEffect(() => {
-    navigate({
-      pathname: `/${category}`,
-      search: createSearchParams({
-        sort
-      }).toString()
-    })
+    if(sort) {
+      navigate({
+        pathname: `/${category}`,
+        search: createSearchParams({
+          sort
+        }).toString()
+      })
+    }
   }, [sort])
 
   return (
@@ -102,11 +108,18 @@ const Products = () => {
           className="my-masonry-grid flex mx-[-10px]"
           columnClassName="my-masonry-grid_column"
         >
-          {products?.map(el => (
+          {products?.products?.map(el => (
             <Product key={el._id} pid={el.id} productData={el} normal={true} />
           ))}
         </Masonry>
       </div>
+
+      {products?.products?.length > 0 &&  <div className='w-main m-auto my-4 flex justify-end'>
+        <Pagination 
+          totalCount={products?.counts} 
+        /> 
+      </div>}
+     
 
       <div className="w-full h-[500px]"></div>
     </div>

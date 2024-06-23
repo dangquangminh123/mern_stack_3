@@ -17,6 +17,8 @@ import {
   renderStarFromNumber,
 } from "../../ultils/helpers";
 import { productExtraInfomation } from "../../ultils/contants";
+import DOMPurify from 'dompurify';
+
 const settings = {
   dots: false,
   infinite: true,
@@ -98,7 +100,7 @@ const DetailProducts = () => {
       </div>
       <div className="w-main m-auto mt-4 flex">
         <div className="flex flex-col gap-4 w-2/5">
-          <div className="w-[458px] h-[458px] border">
+          <div className="w-[458px] h-[458px] border flex items-center overflow-hidden">
             <ReactImageMagnify
               {...{
                 smallImage: {
@@ -151,11 +153,14 @@ const DetailProducts = () => {
             <span className="text-sm text-main italic">{`Đã bán: ${product?.sold} sản phẩm`}</span>
           </div>
           <ul className="list-square text-sm text-gray-500 pl-4">
-            {product?.description?.map((el) => (
+            {product?.description?.length > 1 && product?.description?.map(el => (<li className='leading-6' key={el}>{el}</li>))}
+            {product?.description?.length === 1 && <div className='code text-sm line-clamp-[8] mb-7'
+              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(product?.description[0])}}></div>}
+            {/* {product?.description?.map((el) => (
               <li className="leading-6" key={el}>
                 {el}
               </li>
-            ))}
+            ))} */}
           </ul>
           <div className="flex flex-col gap-8">
             <div className="flex items-center gap-4">

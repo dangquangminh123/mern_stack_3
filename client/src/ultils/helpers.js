@@ -98,3 +98,25 @@ export const validate = (payload, setInvalidFieds) => {
 };
 
 export const formatPrice = number => Math.round(number / 1000) * 1000
+
+export const generateRange = (start, end) => {
+  const length = end + 1 - start
+  return Array.from({length}, (_, index) => start + index)
+}
+
+export function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    if (file && file.type.match('image.*')) {
+      reader.readAsDataURL(file);
+    }
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+
+// async function Main() {
+//  const file = document.querySelector('#myfile').files[0];
+//  console.log(await toBase64(file));
+// }

@@ -57,8 +57,7 @@ var productSchema = new mongoose.Schema(
         postedBy: { type: mongoose.Types.ObjectId, ref: "User" },
         comment: { type: String },
         updatedAt: {
-          type: Date,
-          default: Date.now()
+          type: Date
         }
       },
     ],

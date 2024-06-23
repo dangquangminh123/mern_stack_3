@@ -5,7 +5,12 @@ import { GiShoppingBag, GiHamburgerMenu} from "react-icons/gi";
 import { FaUser, FaStar, FaRegStar, FaEye, FaShieldAlt  } from "react-icons/fa";
 import { FaHeart, FaReply } from "react-icons/fa";
 import { IoHome } from "react-icons/io5";
+import { HiMiniUserGroup } from "react-icons/hi2";
+import { AiOutlineDashboard } from "react-icons/ai";
 import { FaTruckFast, FaGift, FaTty, FaChevronDown  } from "react-icons/fa6";
+import { FcSmartphoneTablet } from "react-icons/fc";
+import { RiBillFill } from "react-icons/ri";
+
 const icons = {
     MdLocalPhone,
     MdOutlineEmail,
@@ -24,7 +29,11 @@ const icons = {
     FaGift,
     FaReply,
     FaChevronDown,
-    FaTty
+    FaTty,
+    AiOutlineDashboard,
+    HiMiniUserGroup,
+    FcSmartphoneTablet,
+    RiBillFill
 }
 
 export default icons

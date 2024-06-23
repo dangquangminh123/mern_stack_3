@@ -195,3 +195,66 @@ export const voteOptions = [
     text: 'Tuyệt vời'
   },
 ]
+
+const {AiOutlineDashboard, HiMiniUserGroup, FcSmartphoneTablet, RiBillFill} = icons
+export const adminSidebar = [
+  {
+    id: 1,
+    type: 'SINGLE',
+    text: 'Dashboard',
+    path: `/${path.ADMIN}/${path.DASHBOARD}`,
+    icon: <AiOutlineDashboard size={20}/>
+  },
+  {
+    id: 2,
+    type: 'SINGLE',
+    text: 'Manage users',
+    path: `/${path.ADMIN}/${path.MANAGE_USER}`,
+    icon: <HiMiniUserGroup size={20}/>
+  }, 
+  {
+    id: 3,
+    type: 'PARENT',
+    text: 'Manage products',
+    icon: <FcSmartphoneTablet size={20}/>,
+    submenu: [
+      {
+        text: 'Create Product',
+        path: `/${path.ADMIN}/${path.CREATE_PRODUCTS}`
+      },
+      {
+        text: 'Manage Product',
+        path: `/${path.ADMIN}/${path.MANAGE_PRODUCTS}`
+      }
+    ]
+  }, 
+  {
+    id: 4,
+    type: 'SINGLE',
+    text: 'Manage orders',
+    path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,
+    icon: <RiBillFill size={20}/>
+  }
+]
+
+export const roles = [
+  {
+    code: 1945,
+    value: 'Admin'
+  },
+  {
+    code: 1979,
+    value: 'User'
+  },
+]
+
+export const blockStatus = [
+  {
+    code: true,
+    value: 'Blocked'
+  },
+  {
+    code: false,
+    value: 'Active'
+  },
+]

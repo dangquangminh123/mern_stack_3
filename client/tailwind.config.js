@@ -62,13 +62,24 @@ module.exports = {
             '-webkit-transform': 'translateX(0px)',
                     transform: 'translateX(0px)'
           }
+        },
+        'slide-fwd-center': {
+          '0%': {
+            '-webkit-transform': 'translateZ(0)',
+                    'transform': 'translateZ(0)',
+          },
+          '100%': {
+            '-webkit-transform': 'translateZ(160px)',
+                    'transform': 'translateZ(160px)',
+          }
         }
         
       },
       animation: {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'slide-top-sm': 'slide-top-sm 0.3s linear both;',
-        'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;'
+        'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'slide-fwd-center': 'slide-fwd-center 0.25s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
       }
     },
   },

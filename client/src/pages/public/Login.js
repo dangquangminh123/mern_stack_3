@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { InputField, Button } from "../../components";
+import { InputField, Button, Loading } from "components";
 import {
   apiRegister,
   apiLogin,
   apiForgotPassword,
   apiFinalRegister,
-} from "../../apis";
+} from "apis/user";
 import Swal from "sweetalert2";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import path from "../../ultils/path";
-import { login } from "../../store/user/userSlice";
+import { useNavigate, Link } from "react-router-dom";
+import path from "ultils/path";
+import { login } from "store/user/userSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { validate } from "../../ultils/helpers";
+import { validate } from "ultils/helpers";
+import { showModal } from "store/app/appSlice";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,18 +60,22 @@ const Login = () => {
       : validate(data, setInvalidFieds);
     if (invalids === 0) {
       if (isRegister) {
-        setisVerifiedEmail(true);
+        dispatch(showModal({isShowModal: true, modalChildren: <Loading />}))
         const response = await apiRegister(payload);
+        dispatch(showModal({isShowModal: false, modalChildren: null}))
         if (response.success) {
           Swal.fire("Đăng ký thành công", response.mes, "success").then(() => {
             setIsRegister(false);
             resetPayload();
           });
-        } else Swal.fire("Đăng ký thất bại", response.mes, "error");
+          setisVerifiedEmail(true);
+        } else { 
+          Swal.fire("Đăng ký thất bại", response.mes, "error");
+        }
       } else {
-        // console.log()
+        dispatch(showModal({isShowModal: true, modalChildren: <Loading />}))
         const rs = await apiLogin(data);
-        console.log(rs);
+        // console.log(rs);
         if (rs.success) {
           dispatch(
             login({
@@ -79,8 +84,9 @@ const Login = () => {
               userData: rs.userData,
             })
           );
+        dispatch(showModal({isShowModal: false, modalChildren: null}))
           navigate(`/${path.HOME}`);
-        } else Swal.fire("Đăng nhập không thành công", rs.mes, "error");
+        } else { Swal.fire("Đăng nhập không thành công", rs.mes, "error"); }
       }
     }
   }, [payload, isRegister]);
@@ -112,7 +118,7 @@ const Login = () => {
               type="text"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              className="p-2 border rounded-md outline-none"
+              className="p-2 border rounded-md outline-none w-full"
             />
             <button
               type="button"
@@ -131,7 +137,7 @@ const Login = () => {
             <input
               type="text"
               id="email"
-              className="w-[800px] pb-2 border-b outline-none placeholder:text-sm"
+              className="w-[800px] pb-2 border-b outline-none placeholder:text-sm w-full"
               placeholder="Exp: email@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -166,6 +172,7 @@ const Login = () => {
                 value={payload.firstname}
                 setValue={setPayload}
                 nameKey="firstname"
+                fullWidth
                 invalidFields={invalidFields}
                 setInvalidFieds={setInvalidFieds}
               />
@@ -173,6 +180,7 @@ const Login = () => {
                 value={payload.lastname}
                 setValue={setPayload}
                 nameKey="lastname"
+                fullWidth
                 invalidFields={invalidFields}
                 setInvalidFieds={setInvalidFieds}
               />
@@ -182,6 +190,7 @@ const Login = () => {
             value={payload.email}
             setValue={setPayload}
             nameKey="email"
+            fullWidth
             invalidFields={invalidFields}
             setInvalidFieds={setInvalidFieds}
           />
@@ -190,6 +199,7 @@ const Login = () => {
               value={payload.mobile}
               setValue={setPayload}
               nameKey="mobile"
+              fullWidth
               invalidFields={invalidFields}
               setInvalidFieds={setInvalidFieds}
             />
@@ -199,6 +209,7 @@ const Login = () => {
             setValue={setPayload}
             nameKey="password"
             type="password"
+            fullWidth
             invalidFields={invalidFields}
             setInvalidFieds={setInvalidFieds}
           />

@@ -81,3 +81,14 @@
     margin-bottom: 20px;
 }
   
+.w500{
+    width: 500px;
+}
+
+.w100{
+    width: 100%;
+}
+
+.sort-content {
+    white-space: initial;
+}
